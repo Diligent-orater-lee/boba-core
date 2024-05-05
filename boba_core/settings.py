@@ -11,21 +11,26 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ENV = environ.Env()
+environ.Env.read_env(env_file=".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#hncek@*5mz=md^_s6ry3w(^z3$y#^4f(5=%h*9-t^wr9=gjfy'
-
+SECRET_KEY = ENV.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENV.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = []
+
+
+# Global constants
 
 
 # Application definition
@@ -37,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'boba_core_admin_api',
+    'utilities',
+    'device_manager'
 ]
 
 MIDDLEWARE = [
