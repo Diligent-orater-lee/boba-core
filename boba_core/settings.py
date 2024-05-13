@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
     'boba_core_admin_api',
     'utilities',
@@ -88,12 +86,12 @@ DATABASES = {
     },
     'mongo': {
         'ENGINE': 'djongo',
-        'NAME': 'mongo_db_name',
+        'NAME': 'boba_core',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
             'host': 'mongodb://localhost:27017',
-            'username': 'root',
-            'password': '',
+            'username': 'mongo_admin',
+            'password': 'mongo_admin_password',
             'authSource': 'admin',
             'authMechanism': 'SCRAM-SHA-1'
         }

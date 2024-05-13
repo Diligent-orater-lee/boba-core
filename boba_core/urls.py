@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('config', include("boba_core_admin_api.urls"))
+    path('config/', include("boba_core_admin_api.urls"))
 ]
