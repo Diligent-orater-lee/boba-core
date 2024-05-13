@@ -1,6 +1,5 @@
 from django.http import JsonResponse
-from utilities.app_validations import FrigateValidations
-from django.views.decorators.http import require_POST
+from rest_framework.decorators import api_view
 from device_manager.sensor_manager_service import SensorManager
 
 
@@ -9,12 +8,9 @@ def test(request):
     return JsonResponse(None)
 
 # Add a camera device
-@require_POST
-def AddDevice(request):
-    frigateValidation = FrigateValidations.FrigateFilesValid()
-    if (not frigateValidation["valid"]):
-        return JsonResponse({"status": False, "error": frigateValidation["error"]})
-    
-    sensorManager = SensorManager(request)
-    return JsonResponse({"error": "COnfigurations are valid"})
+@api_view(['POST'])
+def AddSensor(request):   
+    sensorManager = SensorManager()
+    res = sensorManager.AddSensor(request.data)
+    return JsonResponse(res)
         

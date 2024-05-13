@@ -10,3 +10,6 @@ class Sensor(models.Model):
     # detect_height = models.IntegerField()
     # detect_fps = models.IntegerField()
     # motion_mask = models.JSONField()
+
+class OnvifCamera(Sensor):
+    pass
