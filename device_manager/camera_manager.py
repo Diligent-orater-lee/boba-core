@@ -12,8 +12,11 @@ class CameraManager:
         else:
             cameraData = CameraSerializer(data=data)
             if (cameraData.is_valid()):
-                frigateManager.AddFFMPEGCamera(cameraData)
-                cameraData.save()
-                return CustomUpdateResult(True, "Data created")
+                addInFrigate = frigateManager.AddFFMPEGCamera(cameraData)
+                if (addInFrigate.success):
+                    cameraData.save()
+                    return CustomUpdateResult(True, "Data created")
+                else:
+                    return addInFrigate
             else:
                 return CustomUpdateResult(False, "Invalid data")

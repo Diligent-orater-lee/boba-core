@@ -2,27 +2,34 @@ from django.conf import settings
 import os
 from device_manager.serializers import CameraSerializer
 import yaml
+import requests
+from utilities.http_responses import CustomUpdateResult
 
 class FrigateValidations:
 
-    FRIGATE_ROOT = None
     FRIGATE_CONFIG_FOLDER = None
     FRIGATE_YML_FILE = None
+    FRIGATE_HOST = None
+    FRIGATE_PORT = None
     
     def __init__(self) -> None:
         env = settings.ENV
-        self.FRIGATE_ROOT = env.str("FRIGATE_PATH", default="/frigate")
         self.FRIGATE_CONFIG_FOLDER = env.str("FRIGATE_CONFIG_FOLDER", default="config")
         self.FRIGATE_YML_FILE = env.str("FRIGATE_YML_FILE", default="config.yml")
+        self.FRIGATE_HOST = env.str("FRIGATE_HOST", default="localhost")
+        self.FRIGATE_PORT = env.str("FRIGATE_PORT", default="5000")
+
+    def __frigateConfigPath(self):
+        return {self.FRIGATE_CONFIG_FOLDER}/{self.FRIGATE_YML_FILE}
 
     def FrigateFilesValid(self):
-        if (os.path.isfile(f"{self.FRIGATE_ROOT}/{self.FRIGATE_CONFIG_FOLDER}/{self.FRIGATE_YML_FILE}")):
+        if (os.path.isfile(self.__frigateConfigPath())):
             return {"valid": True, "error": ""}
         else:
-            return {"valid": False, "error": f"Frigate configurations are not found. File does not exists in path: {self.FRIGATE_ROOT}/{self.FRIGATE_CONFIG_FOLDER}/{self.FRIGATE_YML_FILE}"}
+            return {"valid": False, "error": f"Frigate configurations are not found. File does not exists in path: {self.__frigateConfigPath()}"}
         
     def AddFFMPEGCamera(self, item: CameraSerializer):
-        file_path = f"{self.FRIGATE_ROOT}/{self.FRIGATE_CONFIG_FOLDER}/{self.FRIGATE_YML_FILE}"
+        file_path = self.__frigateConfigPath()
         parent_key = "cameras"
         newEntry = {
             item.initial_data["name"]: {
@@ -70,3 +77,21 @@ class FrigateValidations:
 
         with open(file_path, 'w') as file:
             yaml.safe_dump(data, file, default_flow_style=False)
+
+        return self.RestartFrigate()
+
+    def RestartFrigate(self):
+        try:
+            restartUrl = f"http://{self.FRIGATE_HOST}:{self.FRIGATE_PORT}/api/restart"
+            headers = {
+            }
+
+            response = requests.post(restartUrl, headers=headers)
+
+            if response.status_code == 200:
+                return CustomUpdateResult(True, "")
+            else:
+                return CustomUpdateResult(False, "Unable to restart frigate. Frigate API threw an error")
+        except Exception as e:
+            return CustomUpdateResult(False, "Connection to frigate failed")
+        
