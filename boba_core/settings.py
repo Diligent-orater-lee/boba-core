@@ -27,7 +27,7 @@ SECRET_KEY = ENV.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENV.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Global constants
@@ -78,20 +78,20 @@ WSGI_APPLICATION = 'boba_core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'boba_db',
-        'USER': 'boba_user',
-        'PASSWORD': 'boba_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': ENV.str("POSTGRES_DB"),
+        'USER': ENV.str("POSTGRES_USER"),
+        'PASSWORD': ENV.str("POSTGRES_PASSWORD"),
+        'HOST': ENV.str("POSTGRES_HOST"),
+        'PORT': ENV.str("POSTGRES_PORT"),
     },
     'mongo': {
         'ENGINE': 'djongo',
-        'NAME': 'boba_core',
+        'NAME': ENV.str("MONGO_BOBA_DATABASE"),
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb://localhost:27017',
-            'username': 'mongo_admin',
-            'password': 'mongo_admin_password',
+            'host': f'mongodb://{ENV.str("MONGO_DB_HOST")}:{ENV.str("MONGO_PORT")}',
+            'username': ENV.str("MONGO_ROOT_USERNAME"),
+            'password': ENV.str("MONGO_ROOT_PASSWORD"),
             'authSource': 'admin',
             'authMechanism': 'SCRAM-SHA-1'
         }
