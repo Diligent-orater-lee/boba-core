@@ -1,11 +1,11 @@
-from utilities.app_validations import FrigateValidations
+from utilities.frigate import FrigateManager
 from utilities.http_responses import CustomUpdateResult
 from device_manager.serializers import CameraSerializer
 
 class CameraManager:
     def AddOnvifCamera(self, data):
         # FRIGATE CONFIGURATIONS ARE REQUIRED WHEN ADDING CAMERA
-        frigateManager = FrigateValidations()
+        frigateManager = FrigateManager()
         frigateValidation = frigateManager.FrigateFilesValid()
         if (not frigateValidation["valid"]):
             return CustomUpdateResult(False, frigateValidation["error"])
