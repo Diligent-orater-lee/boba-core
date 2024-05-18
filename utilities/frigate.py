@@ -23,7 +23,7 @@ class FrigateManager:
         return f"{self.FRIGATE_CONFIG_FOLDER}/{self.FRIGATE_YML_FILE}"
     
     def __camEntryFromName(self, name: str):
-        return name.lower().replace(" ", "_")
+        return name.lower().replace(" ", "_") # space is not allowed
 
     def FrigateFilesValid(self):
         if (os.path.isfile(self.__frigateConfigPath())):
@@ -46,7 +46,6 @@ class FrigateManager:
 
         newEntry = {
             newEntryName: {
-                "name": item.initial_data["name"],
                 "detect": {
                     "width": item.initial_data["height"],
                     "height": item.initial_data["width"],
