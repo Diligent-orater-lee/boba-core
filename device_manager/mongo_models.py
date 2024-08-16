@@ -21,3 +21,18 @@ class SensorFullData(BaseModel):
     def save(self, *args, **kwargs):
         kwargs.pop("using")
         super().save(using="mongo", *args, **kwargs)
+
+class Slave(models.Model):
+    id = models.CharField(max_length=100, primary_key=True)
+    ip = models.CharField(max_length=45)  # Using CharField instead of GenericIPAddressField
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    component_type = models.CharField(max_length=100)
+
+    objects = models.DjongoManager()
+
+    def __str__(self):
+        return f"{self.name} ({self.id})"
+
+    class Meta:
+        abstract = False

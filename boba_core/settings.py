@@ -27,6 +27,9 @@ SECRET_KEY = ENV.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENV.bool("DEBUG", default=False)
 
+BROADCAST_IP = ENV.bool("BROADCAST_IP", default="255.255.255.255")
+BROADCAST_PORT = ENV.int("BROADCAST_PORT", default=5000)
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -70,6 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'boba_core.wsgi.application'
+ASGI_APPLICATION = 'boba_core.asgi.application'
 
 
 # Database
