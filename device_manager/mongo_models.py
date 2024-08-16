@@ -28,6 +28,8 @@ class Slave(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     component_type = models.CharField(max_length=100)
+    token = models.CharField(max_length=100)
+    status = models.IntegerField()
 
     objects = models.DjongoManager()
 

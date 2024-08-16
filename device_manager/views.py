@@ -25,19 +25,22 @@ class RegisterSlaveView(View):
 
     def post(self, request, *args, **kwargs):
         slave_data = json.loads(request.body)
-        if 'id' not in slave_data:
-            slave_data['id'] = str(uuid.uuid4())
-        slave, created = Slave.objects.update_or_create(
+        if (Slave.objects.filter(id=slave_data['id']).exists()):
+            return JsonResponse({"status" : False, "message": "Device already exists"}, status=200)
+        randomToken = str(uuid.uuid4().hex)
+        slave = Slave.objects.create(
             id=slave_data['id'],
             defaults={
                 'ip': slave_data['ip'],
                 'name': slave_data['name'],
                 'description': slave_data['description'],
-                'component_type': slave_data['componentType']
+                'component_type': slave_data['componentType'],
+                'token': randomToken,
+                'status': 1
             }
         )
-        print(f"{'Registered' if created else 'Updated'} slave {slave.id} with IP {slave.ip}. Details: {slave.name}, {slave.description}, {slave.component_type}")
-        return JsonResponse({"message": "Registration successful"}, status=200)
+        print(f"Registered slave {slave.id} with IP {slave.ip}. Details: {slave.name}, {slave.description}, {slave.component_type}")
+        return JsonResponse({"status" : True,"message": "Registration successful", 'token': randomToken}, status=200)
 
 class SensorStateView(View):
     current_state = "false"
